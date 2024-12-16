@@ -56,8 +56,54 @@ class ModelTrainer:
                 # "CatBoostRegressor" : CatBoostRegressor(),
                 "XGBRegressor" : XGBRegressor()
             }
+            
+            params = {
+                "KNeighborsRegressor" : {
+                    "n_neighbors": np.arange(1, 10),
+                    "weights": ["uniform", "distance"],
+                    "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
+                    "leaf_size": np.arange(1, 50),
+                    "p": [1, 2]
+                },
+                "DecisionTreeRegressor" : {
+                    "criterion": ["mse", "friedman_mse", "mae"],
+                    "splitter": ["best", "random"],
+                    "max_depth": np.arange(1, 50),
+                    "min_samples_split": np.arange(2, 10),
+                    "min_samples_leaf": np.arange(1, 10),
+                    "max_features": ["auto", "sqrt", "log2"]
+                },
+                "RandomForestRegressor" : {
+                    "n_estimators": np.arange(1, 100),
+                    "criterion": ["mse", "mae"],
+                    "max_depth": np.arange(1, 50),
+                    "min_samples_split": np.arange(2, 10),
+                    "min_samples_leaf": np.arange(1, 10),
+                    "max_features": ["auto", "sqrt", "log2"]
+                },
+                "AdaBoostRegressor" : {
+                    "n_estimators": np.arange(1, 100),
+                    "learning_rate": [0.1, 0.01, 0.001, 0.0001, 0.00001]
+                },
+                "SVR" : {
+                    "kernel": ["linear", "poly", "rbf", "sigmoid"],
+                    "degree": np.arange(1, 10),
+                    "gamma": ["scale", "auto"],
+                    "C": np.arange(1, 10),
+                    "epsilon": [0.1, 0.01, 0.001, 0.0001, 0.00001]
+                },
+                "LinearRegression" : {
+                    "fit_intercept": [True, False],
+                    "normalize": [True, False]
+                },
+                "Ridge" : {
+                    "alpha": [0.1, 0.01, 0.001, 0.0001, 0.00001],
+                    "fit_intercept": [True, False],
+                    "normalize": [True, False]
+                },
+            }
             model_report :dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, 
-                                                models=models)
+                                                models=models, params=params)
             best_model_score = max(sorted(model_report.values()))
             
             best_model_name = list(model_report.keys())[
